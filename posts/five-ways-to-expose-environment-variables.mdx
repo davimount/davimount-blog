@@ -1,0 +1,100 @@
+---
+title: Care the Environment: 5 Ways to Expose Environment Variables on a Unix Server
+description: "Master the art of managing environment variables in Unix environments with these five effective methods. Ensure security and accessibility for your .env variables on your server."
+date: Oct 17 2023
+---
+
+If you're anything like me, you've probably spent your fair share of time puzzling over how to export those elusive environment variables on your Unix servers. And, I know, it usually should work straightforwardly, but in some cases, it just doesn't. Well, fear not, because here I'm going to let you in on five handy techniques to master this crucial task.
+
+## 1. Basic Exporting
+
+The most straightforward way to export environment variables is by using the `export` command. For example, to set the `DATABASE_URL` variable, you can simply type:
+
+```bash
+export DATABASE_URL="your_database_connection_string"
+```
+
+The variable will be available in the current session. This method is quick and easy for setting variables temporarily. To check if the variable was loaded correctly, just run:
+
+```bash
+echo $DATABASE_URL
+# this should print "your_database_connection_string"
+```
+
+Remember to wrap environment values inside double quotes (`"..."`) as sometimes they contain special characters that might break you export.
+
+## 2. Using a .env File
+
+To maintain and export multiple environment variables, consider using a `.env` file. Create a file with a list of variables and their values, like this:
+
+```bash
+# .env file content
+DATABASE_URL="your_database_connection_string"
+API_KEY="your_api_key"
+```
+
+To export these variables, use the `source` command:
+
+```bash
+# in the folder containg the .env file
+source .env
+```
+
+This loads the variables into the current environment, making them available to be consumed by the following commands. As said, using a `.env` file is especially handy when you have numerous variables to manage or if you are testing locally different environment configurations.
+
+## 3. Using `cat`
+
+If none of the previous ways are working, you could take a chance on `cat` (we'll need a .env file as seen above):
+
+```bash
+# in the folder containg the .env file
+export $(xargs <.env)
+```
+
+Or:
+
+```bash
+# in the folder containg the .env file
+export $(cat .env)
+```
+
+You can also append the desired command after the export (e.g., `export $(cat .env) npm start`). This approach can be useful in scenarios where other methods may not work as expected.
+
+## 4. Automate Variable Export with .bashrc, .bash_profile, or .zshrc
+
+If you want your environment variables to be available every time you log in, add them to your `~/.bashrc`, `~/.bash_profile`, or `~/.zshrc` file, depending on your shell of choice. For example:
+
+```bash
+# ~/.bashrc or ~/.bash_profile or ~/.zshrc
+export DATABASE_URL="your_database_connection_string"
+export API_KEY="your_api_key"
+```
+
+After saving the file, these variables will be exported every time you open a terminal session, regardless of whether you're using Bash or Zsh. This is a great choice for ensuring that your essential variables are always readily available, no matter which shell you prefer to use.
+
+## 5. Use System-wide Environment Files
+
+Unix systems often have system-wide environment files that load variables for all users. For example, on Linux, you can edit the `/etc/environment` file to add system-wide environment variables. Remember to use this with caution and follow system administration best practices.
+
+Open the environment file with your favorite text editor:
+
+```bash
+sudo nano /etc/environment
+```
+
+Then, add your variables:
+
+```bash
+DATABASE_URL="your_database_connection_string"
+API_KEY="your_api_key"
+```
+
+After saving the file, these variables will be available system-wide.
+
+## So...
+
+In Unix environments, there are several ways to export environment variables, each with its own use case. Choose the method that best suits your needs and ensures the security and accessibility of your .env variables on your Unix server.
+
+Whether you're working on a personal project or managing a production server, mastering the art of handling environment variables is essential for a smooth and secure workflow. With these methods in your toolkit, you're well on your way to becoming an environment variable pro.
+
+Thank you for reading, and remember, caring for the environment isn't just about nature; it's also about your server's environment. So, keep those variables in check and ensure everything runs smoothly!
